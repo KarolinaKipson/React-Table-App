@@ -1,0 +1,13 @@
+nav.navbar {
+  justify-content: space-between;
+}
+nav.navbar a {
+  color: black;
+  text-decoration-style: solid;
+  margin-left: 1em;
+}
+
+.active {
+  background-color: darkslategray;
+  color: black;
+}
