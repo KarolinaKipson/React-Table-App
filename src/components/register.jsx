@@ -3,20 +3,19 @@ import FormField from './form-field';
 import {
   validateFormYup,
   getPropertyValidationErrorYup,
-} from '../utils/validationYupCustomer';
+} from '../utils/validationYupUser';
 
 class RegisterUser extends Component {
   state = {
     user: {
       username: '',
       password: '',
-      email: '',
+      name: '',
     },
     errors: {},
   };
   render() {
     const { errors } = this.state;
-
     return (
       <div className='add-user'>
         <h1>Register as new user</h1>
@@ -62,13 +61,42 @@ class RegisterUser extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const errors = await validateFormYup(this.state.user);
+
     // never null or undefined for set state (validateFormYup can return null if object is empty)
     this.setState({ errors: errors || {} });
+
     if (errors) {
       return;
     }
+    this.postDataToApi(this.state.user);
   };
+  postDataToApi = async (data) => {
+    try {
+      // Create request to api service
+      const req = await fetch('http://www.fulek.com/nks/api/aw/registeruser', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
 
+        // format the data
+        body: JSON.stringify({
+          username: data.username,
+          password: data.password,
+          name: data.name,
+        }),
+      });
+      const res = await req.json();
+      console.log(res);
+      if (res.token) {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('user', res.username);
+        window.open('http://localhost:3001/customers', '_self');
+      }
+      // Log success message
+    } catch (err) {
+      console.error(`ERROR: ${err}`);
+      alert('Can not register new user!');
+    }
+  };
   handleChange = async ({ currentTarget: input }) => {
     const errors = { ...this.state.errors };
     const errorMessage = await getPropertyValidationErrorYup(input);
@@ -78,6 +106,7 @@ class RegisterUser extends Component {
       delete errors[input.name];
     }
     const user = { ...this.state.user };
+    user[input.name] = input.value;
     this.setState({ user, errors });
   };
 }

@@ -47,11 +47,12 @@ class CustomerTable extends Component {
                     }
                   </td>
                   <td>
+                    {' '}
                     <button
                       className='btn btn-danger'
                       onClick={() => onDelete(c.Id)}>
                       Delete
-                    </button>
+                    </button>{' '}
                     <button
                       className='btn btn-primary'
                       onClick={() => onDelete(c.Id)}>

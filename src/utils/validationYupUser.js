@@ -1,8 +1,9 @@
 import * as yup from 'yup';
 
 const validationSchema = yup.object().shape({
-  name: yup.string().required().label('Username'),
-  surname: yup.string().required().password().label('Password'),
+  username: yup.string().required().label('Username'),
+  password: yup.string().required().label('Password'),
+  name: yup.string().required().label('Name'),
 });
 
 // customer object will be validatedat trough schema defined

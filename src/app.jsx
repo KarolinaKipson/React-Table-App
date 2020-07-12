@@ -11,6 +11,7 @@ import NotFound from './components/not-found';
 import ProgramaticNavigation from './components/programatic-navigation';
 import AddCustomer from './components/add-customers';
 import LoginUser from './components/login';
+import RegisterUser from './components/register';
 
 class App extends Component {
   state = {
@@ -46,6 +47,7 @@ class App extends Component {
             <Route path='/not-found' component={NotFound} />
             <Route path='/add' component={AddCustomer} />
             <Route path='/login' component={LoginUser} />
+            <Route path='/register' component={RegisterUser} />
             <Route path='/' component={HomePage} exact />
             <Redirect to='/not-found' />
           </Switch>

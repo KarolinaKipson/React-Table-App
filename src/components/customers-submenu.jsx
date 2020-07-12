@@ -6,6 +6,7 @@ const CustomerSubmenu = (props) => {
   const history = useHistory();
   const navigateToLogin = () => history.push('/login');
   const navigateToLogout = () => history.push('/customers');
+  const navigateToRegister = () => history.push('/register');
   const logout = () => {
     navigateToLogout();
     localStorage.clear();
@@ -19,7 +20,12 @@ const CustomerSubmenu = (props) => {
         </div>
       );
     } else {
-      return <button onClick={navigateToLogin}>Login</button>;
+      return (
+        <div>
+          <button onClick={navigateToLogin}>Login</button>
+          <button onClick={navigateToRegister}>Register</button>
+        </div>
+      );
     }
   };
 
