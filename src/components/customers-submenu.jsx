@@ -15,7 +15,7 @@ const CustomerSubmenu = (props) => {
       return (
         <div>
           <div>Hello {localStorage.getItem('user')}</div>
-          <button onClick={logout()}>Logout</button>
+          <button onClick={logout}>Logout</button>
         </div>
       );
     } else {
