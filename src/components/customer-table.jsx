@@ -2,7 +2,36 @@ import React, { Component } from 'react';
 
 class CustomerTable extends Component {
   render() {
-    const { customers, allCustomers, onDelete, cities, states } = this.props;
+    const {
+      customers,
+      allCustomers,
+      onDelete,
+      cities,
+      states,
+      onEdit,
+    } = this.props;
+
+    let buttonShow;
+
+    if (localStorage.getItem('user')) {
+      buttonShow = (
+        <td>
+          {' '}
+          <button
+            className='btn btn-danger'
+            onClick={() => onDelete(customers.map((c) => c.Id))}>
+            Delete
+          </button>{' '}
+          <button
+            className='btn btn-primary'
+            onClick={() => onEdit(customers.map((c) => c.Id))}>
+            Edit
+          </button>
+        </td>
+      );
+    } else {
+      buttonShow = '';
+    }
     return (
       <div className='container'>
         <table className=' table table-striped table-dark'>
@@ -46,19 +75,7 @@ class CustomerTable extends Component {
                       ).Name
                     }
                   </td>
-                  <td>
-                    {' '}
-                    <button
-                      className='btn btn-danger'
-                      onClick={() => onDelete(c.Id)}>
-                      Delete
-                    </button>{' '}
-                    <button
-                      className='btn btn-primary'
-                      onClick={() => onDelete(c.Id)}>
-                      Edit
-                    </button>
-                  </td>
+                  {buttonShow}
                 </tr>
               );
             })}

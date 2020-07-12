@@ -49,12 +49,17 @@ class Customers extends Component {
           allCustomers={allCustomers}
           cities={cities}
           states={states}
-          onDelete={this.handleDelete}></CustomerTable>
+          onDelete={this.handleDelete}
+          onEdit={this.handleEdit}></CustomerTable>
       </div>
     );
   }
   handleDelete = (customerId) => {
     const customers = this.state.customers.filter((c) => c.Id !== customerId);
+    this.setState({ customers });
+  };
+  handleEdit = (customerId) => {
+    const customers = this.state.customers.filter((c) => c.Id === customerId);
     this.setState({ customers });
   };
   handlePageChange = (pageNumber) => {
