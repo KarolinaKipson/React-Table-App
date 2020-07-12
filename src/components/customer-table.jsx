@@ -52,6 +52,11 @@ class CustomerTable extends Component {
                       onClick={() => onDelete(c.Id)}>
                       Delete
                     </button>
+                    <button
+                      className='btn btn-primary'
+                      onClick={() => onDelete(c.Id)}>
+                      Edit
+                    </button>
                   </td>
                 </tr>
               );

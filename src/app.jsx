@@ -10,6 +10,7 @@ import ShowParams from './components/show-params';
 import NotFound from './components/not-found';
 import ProgramaticNavigation from './components/programatic-navigation';
 import AddCustomer from './components/add-customers';
+import LoginUser from './components/login';
 
 class App extends Component {
   state = {
@@ -17,9 +18,10 @@ class App extends Component {
     customers: [],
     currentPage: 1,
     pageSize: 10,
+    possiblePageSize: [5, 10, 20, 50],
   };
   render() {
-    const { customers, currentPage, pageSize } = this.state;
+    const { customers, currentPage, pageSize, possiblePageSize } = this.state;
     return (
       <React.Fragment>
         <Navbar />
@@ -34,6 +36,7 @@ class App extends Component {
                   customers={customers}
                   currentPage={currentPage}
                   pageSize={pageSize}
+                  possiblePageSize={possiblePageSize}
                 />
               )}
             />
@@ -42,6 +45,7 @@ class App extends Component {
             <Route path='/navigation' component={ProgramaticNavigation} />
             <Route path='/not-found' component={NotFound} />
             <Route path='/add' component={AddCustomer} />
+            <Route path='/login' component={LoginUser} />
             <Route path='/' component={HomePage} exact />
             <Redirect to='/not-found' />
           </Switch>

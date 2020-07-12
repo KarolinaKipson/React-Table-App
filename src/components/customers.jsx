@@ -10,6 +10,7 @@ class Customers extends Component {
   state = {
     // never null or undefined, empty type you want to define
     customers: this.props.customers,
+    possiblePageSize: this.props.possiblePageSize,
     cities: this.props.cities,
     states: this.props.states,
     currentPage: this.props.currentPage,
@@ -19,6 +20,7 @@ class Customers extends Component {
   render() {
     const {
       customers: allCustomers,
+      possiblePageSize,
       currentPage,
       pageSize,
       cities,
@@ -29,12 +31,12 @@ class Customers extends Component {
     return (
       <div>
         <DropDown
-          options={allCustomers}
-          id='telephones'
-          name='telephone'
-          label='Telephones'
-          optionText='Telephone'
-          optionValue='Id'
+          options={possiblePageSize}
+          id='possiblePageSize'
+          name='possiblePageSize'
+          label='Customers on a page'
+          optionText={possiblePageSize[1]}
+          optionValue={possiblePageSize[1]}
         />
         <Pagination
           pageSize={pageSize}
@@ -81,19 +83,27 @@ class Customers extends Component {
     // this.setState({ customers });
   }
   async getAllData() {
-    let responseCustomers = await fetch(
-      'http://www.fulek.com/nks/api/aw/customers'
-    );
-    let jsonCustomers = await responseCustomers.json();
-    let responseCities = await fetch('http://www.fulek.com/nks/api/aw/cities');
-    let jsonCities = await responseCities.json();
-    let responseStates = await fetch('http://www.fulek.com/nks/api/aw/states');
-    let jsonStates = await responseStates.json();
-    this.setState({
-      customers: jsonCustomers,
-      cities: jsonCities,
-      states: jsonStates,
-    });
+    try {
+      let responseCustomers = await fetch(
+        'http://www.fulek.com/nks/api/aw/customers'
+      );
+      let jsonCustomers = await responseCustomers.json();
+      let responseCities = await fetch(
+        'http://www.fulek.com/nks/api/aw/cities'
+      );
+      let jsonCities = await responseCities.json();
+      let responseStates = await fetch(
+        'http://www.fulek.com/nks/api/aw/states'
+      );
+      let jsonStates = await responseStates.json();
+      this.setState({
+        customers: jsonCustomers,
+        cities: jsonCities,
+        states: jsonStates,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 

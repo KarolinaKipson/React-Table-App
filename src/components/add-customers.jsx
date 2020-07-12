@@ -3,7 +3,7 @@ import FormField from './form-field';
 import {
   validateFormYup,
   getPropertyValidationErrorYup,
-} from '../utils/validationYup';
+} from '../utils/validationYupCustomer';
 
 class AddCustomer extends Component {
   state = {
