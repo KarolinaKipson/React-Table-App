@@ -12,6 +12,8 @@ import ProgramaticNavigation from './components/programatic-navigation';
 import AddCustomer from './components/add-customers';
 import LoginUser from './components/login';
 import RegisterUser from './components/register';
+import Bills from './components/bills';
+import Items from './components/items';
 
 class App extends Component {
   state = {
@@ -19,10 +21,24 @@ class App extends Component {
     customers: [],
     currentPage: 1,
     pageSize: 10,
+    bills: [],
+    items: [],
     possiblePageSize: [5, 10, 20, 50],
   };
   render() {
-    const { customers, currentPage, pageSize, possiblePageSize } = this.state;
+    const {
+      customers,
+      currentPage,
+      pageSize,
+      possiblePageSize,
+      bills,
+      items,
+    } = this.state;
+    let redirectToUrl;
+    if (!localStorage.getItem('user')) {
+      //check condition
+      redirectToUrl = <Redirect to={LoginUser} />;
+    }
     return (
       <React.Fragment>
         <Navbar />
@@ -41,14 +57,37 @@ class App extends Component {
                 />
               )}
             />
-            <Route path='/detail/:id/:color' component={CustomerDetail} />
-            <Route path='/params' component={ShowParams} />
-            <Route path='/navigation' component={ProgramaticNavigation} />
+            <Route
+              path='/bills'
+              render={(props) => (
+                <Bills
+                  {...props}
+                  bills={bills}
+                  currentPage={currentPage}
+                  pageSize={pageSize}
+                />
+              )}
+            />
+            <Route
+              path='/items'
+              render={(props) => (
+                <Items
+                  {...props}
+                  items={items}
+                  currentPage={currentPage}
+                  pageSize={pageSize}
+                />
+              )}
+            />
             <Route path='/not-found' component={NotFound} />
-            <Route path='/add' component={AddCustomer} />
             <Route path='/login' component={LoginUser} />
             <Route path='/register' component={RegisterUser} />
             <Route path='/' component={HomePage} exact />
+
+            <Route path='/detail/:id/:color' component={CustomerDetail} />
+            <Route path='/params' component={ShowParams} />
+            <Route path='/navigation' component={ProgramaticNavigation} />
+            <Route path='/add' component={AddCustomer} />
             <Redirect to='/not-found' />
           </Switch>
         </div>
