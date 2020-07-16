@@ -112,7 +112,7 @@ class Customers extends Component {
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            Token: localStorage.getItem('token'),
+            Authorization: `Bearer ${token}`,
           },
           method: 'POST',
           body: JSON.stringify({ Id: customerId }),
@@ -121,6 +121,7 @@ class Customers extends Component {
       let jsonDelete = await responseCustomers.json();
       console.log(jsonDelete);
       alert('Customer ' + customerId + ' deleted.');
+      window.open('http://localhost:3001/customers', '_self');
     } catch (error) {
       console.error(error);
       alert('Can not delete customer.');

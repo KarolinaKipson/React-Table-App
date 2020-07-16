@@ -135,7 +135,7 @@ class AddCustomer extends Component {
     try {
       const token = localStorage.getItem('token');
       // Create request to api service
-      const req = await fetch('http://www.fulek.com/nks/api/aw/additem', {
+      const req = await fetch('http://www.fulek.com/nks/api/aw/addcustomer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -159,7 +159,7 @@ class AddCustomer extends Component {
       // Log success message
     } catch (err) {
       console.error(`ERROR: ${err}`);
-      alert('Can not register new user!');
+      alert('Can not add new customer!');
     }
   };
   validateForm = () => {

@@ -65,7 +65,7 @@ class Bills extends Component {
     try {
       const token = localStorage.getItem('token');
       // Create request to api service
-      const req = await fetch('http://www.fulek.com/nks/api/aw/deleteItem', {
+      const req = await fetch('http://www.fulek.com/nks/api/aw/deleteBill', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ class Bills extends Component {
       console.log(res);
 
       window.open(
-        'http://localhost:3001/bills/' + this.state.item.customerId,
+        'http://localhost:3001/bills/' + this.state.customerId,
         '_self'
       );
       alert('Bill succesfully deleted');

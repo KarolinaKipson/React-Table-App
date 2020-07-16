@@ -6,8 +6,12 @@ import { Link } from 'react-router-dom';
 
 class CustomerDetail extends Component {
   state = {
-    customerId: this.props.match.params.id,
-    customer: [],
+    CustomerId: this.props.match.params.id,
+    Name: '',
+    Surname: '',
+    Email: '',
+    Telephone: '',
+    CityId: '',
     cities: [],
   };
 
@@ -17,43 +21,43 @@ class CustomerDetail extends Component {
         <h1>
           <span className='badge badge-danger'>
             Customer id:{' '}
-            <span className='badge badge-dark'>{this.state.customerId}</span>
+            <span className='badge badge-dark'>{this.state.CustomerId}</span>
           </span>
         </h1>
         <hr />
         <div className='jumbotron'>
-          <form>
+          <form onSubmit={this.handleSubmit}>
             <FormField
               id='Name'
               name='Name'
               label='Name'
               type='text'
-              defaultValue={this.state.customer.Name}
-              onChange={(e) => this.handleChange(e)}
+              value={this.state.Name}
+              onChange={this.handleChange.bind(this)}
             />
             <FormField
               id='surname'
               name='surname'
               label='Surname'
               type='text'
-              defaultValue={this.state.customer.Surname}
-              onChange={(e) => this.handleChange(e)}
+              value={this.state.Surname}
+              onChange={this.handleChange.bind(this)}
             />
             <FormField
               id='email'
               name='email'
               label='Email'
               type='email'
-              defaultValue={this.state.customer.Email}
-              onChange={(e) => this.handleChange(e)}
+              value={this.state.Email}
+              onChange={this.handleChange.bind(this)}
             />
             <FormField
               id='telephone'
               name='telephone'
               label='Telephone'
               type='tel'
-              defaultValue={this.state.customer.Telephone}
-              onChange={(e) => this.handleChange(e)}
+              value={this.state.Telephone}
+              onChange={this.handleChange.bind(this)}
             />
             <DropDown
               options={this.state.cities}
@@ -72,32 +76,45 @@ class CustomerDetail extends Component {
       </div>
     );
   }
-
-  componentDidMount() {
-    this.getCities();
+  componentWillMount() {
     this.getData();
+    this.getCities();
+  }
+  componentDidMount() {
+    //this.getCities();
+    //this.getData();
     //this.setState(this.state);
   }
 
-  componentDidUpdate() {}
   getData = async () => {
     let responseCustomer = await fetch(
-      'http://www.fulek.com/nks/api/aw/customer/' + this.state.customerId
+      'http://www.fulek.com/nks/api/aw/customer/' + this.state.CustomerId
     );
     const customerJson = await responseCustomer.json();
     console.log(customerJson);
 
-    this.setState({ customer: customerJson });
+    this.setState({
+      Name: customerJson.Name,
+      CustomerId: customerJson.Id,
+      Surname: customerJson.Surname,
+      Email: customerJson.Email,
+      Telephone: customerJson.Telephone,
+      CityId: customerJson.CityId,
+    });
   };
   getCities = async () => {
     let responseCities = await fetch('http://www.fulek.com/nks/api/aw/cities');
     const citiesJson = await responseCities.json();
     this.setState({ cities: citiesJson });
   };
-  async editCustomer(customer) {
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    this.editCustomer(this.state.Name, this.state.CustomerId);
+  };
+  async editCustomer(name, customerId, surname, email, telephone, cityId) {
     try {
       const token = localStorage.getItem('token');
-      let responseCustomers = await fetch(
+      let reqCustomers = await fetch(
         'http://www.fulek.com/nks/api/aw/editcustomer',
         {
           headers: {
@@ -106,15 +123,28 @@ class CustomerDetail extends Component {
             Authorization: `Bearer ${token}`,
           },
           method: 'POST',
-          body: JSON.stringify({ customer: customer }),
+          body: JSON.stringify({
+            Id: +customerId,
+            Name: name,
+            Surname: surname,
+            Email: email,
+            Telephone: telephone,
+            CityId: +cityId,
+          }),
         }
       );
-      let jsonEdit = await responseCustomers.json();
+      let jsonEdit = await reqCustomers.json();
       console.log(jsonEdit);
       this.setState({
-        customer: jsonEdit,
+        Name: jsonEdit.Name,
+        CustomerId: jsonEdit.Id,
+        Surname: jsonEdit.Surname,
+        Email: jsonEdit.Email,
+        Telephone: jsonEdit.Telephone,
+        CityId: jsonEdit.CityId,
       });
-      alert('Customer ' + customer.Id + ' edited.');
+      alert('Customer ' + this.state.CustomerId + ' edited.');
+      window.open('http://localhost:3001/customers', '_self');
     } catch (error) {
       console.error(error);
     }
@@ -124,23 +154,19 @@ class CustomerDetail extends Component {
 
     this.setState({ cityId: e.target.value });
   }
+  // handleChange(e) {
+  //   this.setState({
+  //     [e.target.name]: e.target.defaultValue,
+  //   });
+  // }
   handleChange(e) {
+    const target = e.target.value;
+    const value = target.value;
+    const name = target.name;
     this.setState({
-      [e.target.name]: e.target.defaultValue,
+      [name]: value,
     });
   }
-  // handleChange = async ({ currentTarget: input }) => {
-  //   /*  const errors = { ...this.state.errors };
-  //   const errorMessage = await getPropertyValidationErrorYup(input);
-  //   if (errorMessage) {
-  //     errors[input.name] = errorMessage.message;
-  //   } else {
-  //     delete errors[input.name];
-  //   } */
-  //   const customer = { ...this.state.customer };
-  //   customer[input.name] = input.value;
-  //   this.setState({ customer });
-  // };
 }
 
 export default CustomerDetail;
