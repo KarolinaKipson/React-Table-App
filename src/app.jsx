@@ -85,7 +85,7 @@ class App extends Component {
             <Route path='/' component={HomePage} exact />
             <Route path='/detail/:id' component={CustomerDetail} />
             <Route path='/addCustomer' component={AddCustomer} />
-            <Route path='/addBill' component={AddBill} />
+            <Route path='/addBill/:id' component={AddBill} />
             <Route path='/addItem/:id' component={AddItem} />
             <Route path='/editUser' component={EditUser} />
             <Route path='/params' component={ShowParams} />

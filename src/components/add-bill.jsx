@@ -16,13 +16,14 @@ class AddBill extends Component {
     sellers: [],
     sellerId: '',
     creditcard: {
+      id: '',
       type: '',
       cardNumber: '',
       expirationMonth: '',
       expirationYear: '',
     },
     customers: [],
-    customerId: '',
+    customerId: this.props.match.params.id,
     errors: {},
   };
   render() {
@@ -61,20 +62,13 @@ class AddBill extends Component {
               onChange={this.handleChange}
             />
             <DropDown
-              options={this.state.customers}
-              id='customers'
-              name='customers'
-              label='Customer'
-              optionText='Surname'
-              optionValue='Id'
-            />
-            <DropDown
               options={this.state.sellers}
               id='sellers'
               name='sellers'
               label='Seller'
               optionText='Surname'
               optionValue='Id'
+              onChange={(e) => this.handleDropdownChangeSeller(e)}
             />
             <FormField
               id='type'
@@ -122,7 +116,6 @@ class AddBill extends Component {
   }
   componentDidMount() {
     this.getSellers();
-    this.getCustomers();
   }
   getSellers = async () => {
     let responseSellers = await fetch(
@@ -131,13 +124,12 @@ class AddBill extends Component {
     const sellersJson = await responseSellers.json();
     this.setState({ sellers: sellersJson });
   };
-  getCustomers = async () => {
-    let responseCustomers = await fetch(
-      'http://www.fulek.com/nks/api/aw/last200customers'
-    );
-    const customersJson = await responseCustomers.json();
-    this.setState({ customers: customersJson });
-  };
+  handleDropdownChangeSeller(e) {
+    // const categoryId = { ...this.state.categoryId };
+
+    this.setState({ sellerId: e.target.value });
+  }
+
   handleSubmit = async (e) => {
     e.preventDefault();
     //const errors = await validateFormYup(this.state.user);
@@ -148,7 +140,18 @@ class AddBill extends Component {
     // if (errors) {
     //   return;
     // }
-    this.postDataToApi(this.state.user);
+
+    this.dataApi();
+  };
+  dataApi = async () => {
+    await this.postDataToApiCreditCard(this.state.creditcard);
+    console.log(this.state.creditcard.Id);
+    this.postDataToApi(
+      this.state.bill,
+      this.state.customerId,
+      this.state.sellerId,
+      this.state.creditcard.Id
+    );
   };
   postDataToApi = async (bill, customerId, sellerId, creditCardId) => {
     try {
@@ -177,20 +180,52 @@ class AddBill extends Component {
       // Log success message
     } catch (err) {
       console.error(`ERROR: ${err}`);
-      alert('Can not register new user!');
+      alert('Can not add new bill!');
+    }
+  };
+
+  postDataToApiCreditCard = async (creditcard) => {
+    try {
+      // Create request to api service
+      const token = localStorage.getItem('token');
+      const req = await fetch('http://www.fulek.com/nks/api/aw/addcreditcard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+
+        // format the data
+        body: JSON.stringify({
+          Type: creditcard.type,
+          CardNumber: creditcard.cardNumber,
+          ExpirationMonth: creditcard.expirationMonth,
+          ExpirationYear: creditcard.expirationYear,
+        }),
+      });
+      const res = await req.json();
+      console.log(res);
+      this.setState({ creditcard: res });
+      // console.log('creditcard is ' + creditcard.Id);
+      // Log success message
+    } catch (err) {
+      console.error(`ERROR: ${err}`);
+      //alert('CreditCardAdded!');
     }
   };
   handleChange = async ({ currentTarget: input }) => {
-    const errors = { ...this.state.errors };
-    const errorMessage = await getPropertyValidationErrorYup(input);
-    if (errorMessage) {
-      errors[input.name] = errorMessage.message;
-    } else {
-      delete errors[input.name];
-    }
-    const user = { ...this.state.user };
-    user[input.name] = input.value;
-    this.setState({ user, errors });
+    // const errors = { ...this.state.errors };
+    // const errorMessage = await getPropertyValidationErrorYup(input);
+    // if (errorMessage) {
+    //   errors[input.name] = errorMessage.message;
+    // } else {
+    //   delete errors[input.name];
+    // }
+    const bill = { ...this.state.bill };
+    bill[input.name] = input.value;
+    const creditcard = { ...this.state.creditcard };
+    creditcard[input.name] = input.value;
+    this.setState({ bill, creditcard });
   };
 }
 

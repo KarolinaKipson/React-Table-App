@@ -6,7 +6,7 @@ class BillsTable extends Component {
     const { bills, allBills, onDelete } = this.props;
     return (
       <div className='container'>
-        <Link to={'/addBill'}>
+        <Link to={`/addBill/${bills.map((bill) => bill.Id)[0]}`}>
           <h3>
             <span className='badge badge-dark'>Add Bill</span>
           </h3>
