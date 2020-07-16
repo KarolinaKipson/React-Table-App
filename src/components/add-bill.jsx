@@ -144,14 +144,15 @@ class AddBill extends Component {
     this.dataApi();
   };
   dataApi = async () => {
-    await this.postDataToApiCreditCard(this.state.creditcard);
-    console.log(this.state.creditcard.Id);
-    this.postDataToApi(
+    let response = await this.postDataToApiCreditCard(this.state.creditcard);
+    console.log(response);
+    const res = await this.postDataToApi(
       this.state.bill,
       this.state.customerId,
       this.state.sellerId,
-      this.state.creditcard.Id
+      +response
     );
+    //console.log(res);
   };
   postDataToApi = async (bill, customerId, sellerId, creditCardId) => {
     try {
@@ -176,7 +177,7 @@ class AddBill extends Component {
       });
       const res = await req.json();
       console.log(res);
-
+      return res;
       // Log success message
     } catch (err) {
       console.error(`ERROR: ${err}`);
@@ -204,8 +205,9 @@ class AddBill extends Component {
         }),
       });
       const res = await req.json();
-      console.log(res);
+      //console.log(res);
       this.setState({ creditcard: res });
+      return res.Id;
       // console.log('creditcard is ' + creditcard.Id);
       // Log success message
     } catch (err) {

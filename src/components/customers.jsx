@@ -35,8 +35,9 @@ class Customers extends Component {
           id='possiblePageSize'
           name='possiblePageSize'
           label='Customers on a page'
-          optionText={possiblePageSize[1]}
-          optionValue={possiblePageSize[1]}
+          optionText='value'
+          optionValue='value'
+          onChange={(e) => this.handleDropdownChange(e)}
         />
         <h1>
           <span className='badge badge-danger'>Customers</span>
@@ -71,7 +72,11 @@ class Customers extends Component {
     const currentPage = pageNumber;
     this.setState({ currentPage });
   };
+  handleDropdownChange(e) {
+    // const categoryId = { ...this.state.categoryId };
 
+    this.setState({ pageSize: +e.target.value });
+  }
   componentDidMount() {
     this.getAllData();
   }

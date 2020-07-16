@@ -26,7 +26,12 @@ class App extends Component {
     pageSize: 10,
     bills: [],
     items: [],
-    possiblePageSize: [5, 10, 20, 50],
+    possiblePageSize: [
+      { name: 1, value: 5 },
+      { name: 2, value: 10 },
+      { name: 3, value: 20 },
+      { name: 4, value: 50 },
+    ],
   };
   render() {
     const {
