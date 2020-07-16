@@ -14,6 +14,9 @@ import LoginUser from './components/login';
 import RegisterUser from './components/register';
 import Bills from './components/bills';
 import Items from './components/items';
+import AddBill from './components/add-bill';
+import AddItem from './components/add-item';
+import EditUser from './components/edit-user';
 
 class App extends Component {
   state = {
@@ -34,11 +37,7 @@ class App extends Component {
       bills,
       items,
     } = this.state;
-    let redirectToUrl;
-    if (!localStorage.getItem('user')) {
-      //check condition
-      redirectToUrl = <Redirect to={LoginUser} />;
-    }
+
     return (
       <React.Fragment>
         <Navbar />
@@ -57,8 +56,9 @@ class App extends Component {
                 />
               )}
             />
+
             <Route
-              path='/bills'
+              path='/bills/:id'
               render={(props) => (
                 <Bills
                   {...props}
@@ -69,7 +69,7 @@ class App extends Component {
               )}
             />
             <Route
-              path='/items'
+              path='/items/:id'
               render={(props) => (
                 <Items
                   {...props}
@@ -83,11 +83,14 @@ class App extends Component {
             <Route path='/login' component={LoginUser} />
             <Route path='/register' component={RegisterUser} />
             <Route path='/' component={HomePage} exact />
-
-            <Route path='/detail/:id/:color' component={CustomerDetail} />
+            <Route path='/detail/:id' component={CustomerDetail} />
+            <Route path='/addCustomer' component={AddCustomer} />
+            <Route path='/addBill' component={AddBill} />
+            <Route path='/addItem/:id' component={AddItem} />
+            <Route path='/editUser' component={EditUser} />
             <Route path='/params' component={ShowParams} />
             <Route path='/navigation' component={ProgramaticNavigation} />
-            <Route path='/add' component={AddCustomer} />
+
             <Redirect to='/not-found' />
           </Switch>
         </div>

@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 class Items extends Component {
   state = {
-    // never null or undefined, empty type you want to define
+    billId: this.props.match.params.id,
     items: this.props.items,
     currentPage: this.props.currentPage,
     pageSize: this.props.pageSize,
@@ -17,6 +17,9 @@ class Items extends Component {
     const items = _(allItems).slice(startIndex).take(pageSize).value();
     return (
       <div>
+        <h1>
+          <span className='badge badge-danger'>Bill items</span>
+        </h1>
         <Pagination
           pageSize={pageSize}
           currentPage={currentPage}
@@ -32,8 +35,9 @@ class Items extends Component {
     );
   }
   handleDelete = (itemId) => {
-    const items = this.state.items.filter((c) => c.Id !== itemId);
-    this.setState({ items });
+    this.deleteItem(itemId);
+    //const items = this.state.items.filter((c) => c.Id !== itemId);
+    //this.setState({ items });
   };
   handleEdit = (itemId) => {
     const items = this.state.items.filter((c) => c.Id === itemId);
@@ -50,7 +54,7 @@ class Items extends Component {
   async getAllData() {
     try {
       let responseItems = await fetch(
-        'http://www.fulek.com/nks/api/aw/billitems/50744'
+        'http://www.fulek.com/nks/api/aw/billitems/' + this.state.billId
       );
       let jsonItems = await responseItems.json();
       console.log(jsonItems);
@@ -59,6 +63,32 @@ class Items extends Component {
       });
     } catch (error) {
       console.error(error);
+    }
+  }
+  async deleteItem(itemId) {
+    try {
+      const token = localStorage.getItem('token');
+      // Create request to api service
+      const req = await fetch('http://www.fulek.com/nks/api/aw/deleteItem', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+
+        // format the data
+        body: JSON.stringify({
+          id: itemId,
+        }),
+      });
+      const res = await req.json();
+      console.log(res);
+      window.location.reload(true);
+      alert('Item succesfully deleted');
+      // Log success message
+    } catch (err) {
+      console.error(`ERROR: ${err}`);
+      alert('Can not delete an item!');
     }
   }
 }

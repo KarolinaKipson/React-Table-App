@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class ItemsTable extends Component {
   render() {
-    const { items, allItems, onDelete, onEdit } = this.props;
+    const { items, allItems, onDelete } = this.props;
     return (
       <div className='container'>
+        <Link to={`/addItem/${items.map((item) => item.BillId)[0]}`}>
+          <h3>
+            <span className='badge badge-dark'>Add Item</span>
+          </h3>
+        </Link>
         <table className=' table table-striped table-dark'>
           <thead className='thead-light '>
             <tr>
-              <th colSpan='5'>
+              <th colSpan='7'>
                 {allItems.length > 0 ? (
                   <span>Items: {allItems.length}</span>
                 ) : (
@@ -42,14 +48,9 @@ class ItemsTable extends Component {
                     {' '}
                     <button
                       className='btn btn-danger'
-                      onClick={() => onDelete(item.map((c) => c.Id))}>
+                      onClick={() => onDelete(item.Id)}>
                       Delete
                     </button>{' '}
-                    <button
-                      className='btn btn-primary'
-                      onClick={() => onEdit(item.map((c) => c.Id))}>
-                      Edit
-                    </button>
                   </td>
                 </tr>
               );

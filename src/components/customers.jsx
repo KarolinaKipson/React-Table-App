@@ -38,6 +38,9 @@ class Customers extends Component {
           optionText={possiblePageSize[1]}
           optionValue={possiblePageSize[1]}
         />
+        <h1>
+          <span className='badge badge-danger'>Customers</span>
+        </h1>
         <Pagination
           pageSize={pageSize}
           currentPage={currentPage}
@@ -55,12 +58,14 @@ class Customers extends Component {
     );
   }
   handleDelete = (customerId) => {
-    const customers = this.state.customers.filter((c) => c.Id !== customerId);
-    this.setState({ customers });
+    this.deleteCustomer(customerId);
+
+    // this.setState({ customers });
   };
-  handleEdit = (customerId) => {
-    const customers = this.state.customers.filter((c) => c.Id === customerId);
-    this.setState({ customers });
+  handleEdit = (customer) => {
+    this.editCustomer(customer);
+    //const customers = this.state.customers.filter((c) => c.Id === customerId);
+    // this.setState({ customers });
   };
   handlePageChange = (pageNumber) => {
     const currentPage = pageNumber;
@@ -69,23 +74,6 @@ class Customers extends Component {
 
   componentDidMount() {
     this.getAllData();
-    /*  fetch('http://www.fulek.com/nks/api/aw/customers')
-      .then((response) => response.json())
-      .then((customers) => this.setState({ customers }));
-    fetch('http://www.fulek.com/nks/api/aw/cities')
-      .then((response) => response.json())
-      .then((cities) => {
-        this.setState({ cities });
-       
-      });
-    fetch('http://www.fulek.com/nks/api/aw/states')
-      .then((response) => response.json())
-      .then((states) => {
-        this.setState({ states });
-       
-      }); */
-    //const customers = getCustomers();
-    // this.setState({ customers });
   }
   async getAllData() {
     try {
@@ -108,6 +96,29 @@ class Customers extends Component {
       });
     } catch (error) {
       console.error(error);
+    }
+  }
+  async deleteCustomer(customerId) {
+    try {
+      const token = localStorage.getItem('token');
+      let responseCustomers = await fetch(
+        'http://www.fulek.com/nks/api/aw/deletecustomer',
+        {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Token: localStorage.getItem('token'),
+          },
+          method: 'POST',
+          body: JSON.stringify({ Id: customerId }),
+        }
+      );
+      let jsonDelete = await responseCustomers.json();
+      console.log(jsonDelete);
+      alert('Customer ' + customerId + ' deleted.');
+    } catch (error) {
+      console.error(error);
+      alert('Can not delete customer.');
     }
   }
 }

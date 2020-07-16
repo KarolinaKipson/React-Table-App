@@ -4,6 +4,7 @@ import {
   validateFormYup,
   getPropertyValidationErrorYup,
 } from '../utils/validationYupCustomer';
+import DropDown from './drop-down';
 
 class AddCustomer extends Component {
   state = {
@@ -13,6 +14,8 @@ class AddCustomer extends Component {
       email: '',
       telephone: '',
     },
+    cities: [],
+    cityId: '',
     errors: {},
   };
   render() {
@@ -60,6 +63,15 @@ class AddCustomer extends Component {
               error={errors.telephone}
               onChange={this.handleChange}
             />
+            <DropDown
+              options={this.state.cities}
+              id='cities'
+              name='cities'
+              label='Cities'
+              optionText='Name'
+              optionValue='Id'
+              onChange={(e) => this.handleDropdownChange(e)}
+            />
             <button className='btn btn-primary' type='submit'>
               Create
             </button>
@@ -67,6 +79,9 @@ class AddCustomer extends Component {
         </div>
       </div>
     );
+  }
+  componentDidMount() {
+    this.getAllCities();
   }
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -76,6 +91,7 @@ class AddCustomer extends Component {
     if (errors) {
       return;
     }
+    this.postDataToApi(this.state.customer, this.state.cityId);
   };
   getPropertyValidation = ({ name, value }) => {
     switch (name) {
@@ -105,7 +121,47 @@ class AddCustomer extends Component {
     customer[input.name] = input.value;
     this.setState({ customer, errors });
   };
+  handleDropdownChange(e) {
+    // const categoryId = { ...this.state.categoryId };
 
+    this.setState({ cityId: e.target.value });
+  }
+  getAllCities = async () => {
+    let responseCities = await fetch('http://www.fulek.com/nks/api/aw/cities');
+    const citiesJson = await responseCities.json();
+    this.setState({ cities: citiesJson });
+  };
+  postDataToApi = async (customer, cityId) => {
+    try {
+      const token = localStorage.getItem('token');
+      // Create request to api service
+      const req = await fetch('http://www.fulek.com/nks/api/aw/additem', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+
+        // format the data
+        body: JSON.stringify({
+          Name: customer.name,
+          Surname: customer.surname,
+          Email: customer.email,
+          Telephone: customer.telephone,
+          CityId: cityId,
+        }),
+      });
+      const res = await req.json();
+      console.log(res);
+
+      window.open('http://localhost:3001/customers', '_self');
+      alert('Customer succesfully added');
+      // Log success message
+    } catch (err) {
+      console.error(`ERROR: ${err}`);
+      alert('Can not register new user!');
+    }
+  };
   validateForm = () => {
     const errors = {};
     const { customer } = this.state;

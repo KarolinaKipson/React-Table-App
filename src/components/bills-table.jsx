@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class BillsTable extends Component {
   render() {
-    const { bills, allBills } = this.props;
+    const { bills, allBills, onDelete } = this.props;
     return (
       <div className='container'>
+        <Link to={'/addBill'}>
+          <h3>
+            <span className='badge badge-dark'>Add Bill</span>
+          </h3>
+        </Link>
         <table className=' table table-striped table-dark'>
           <thead className='thead-light '>
             <tr>
-              <th colSpan='5'>
+              <th colSpan='7'>
                 {allBills.length > 0 ? (
                   <span>Bills: {allBills.length}</span>
                 ) : (
@@ -22,6 +28,7 @@ class BillsTable extends Component {
               <th>Credit Card number</th>
               <th>Expiration Date</th>
               <th>Seller</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -39,6 +46,17 @@ class BillsTable extends Component {
                   <td>
                     {b.Seller != null ? b.Seller.Name : ''} {''}
                     {b.Seller != null ? b.Seller.Surname : ''}
+                  </td>
+                  <td>
+                    {' '}
+                    <button
+                      className='btn btn-danger'
+                      onClick={() => onDelete(b.Id)}>
+                      Delete Bill
+                    </button>{' '}
+                    <Link className='btn btn-primary' to={'/items/' + b.Id}>
+                      Show Items
+                    </Link>
                   </td>
                 </tr>
               );

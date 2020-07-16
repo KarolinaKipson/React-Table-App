@@ -150,7 +150,7 @@ class AddBill extends Component {
     // }
     this.postDataToApi(this.state.user);
   };
-  postDataToApi = async (bill, customerId, sellerId, c) => {
+  postDataToApi = async (bill, customerId, sellerId, creditCardId) => {
     try {
       // Create request to api service
       const token = localStorage.getItem('token');

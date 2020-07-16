@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class CustomerTable extends Component {
   render() {
@@ -12,10 +13,15 @@ class CustomerTable extends Component {
     } = this.props;
     return (
       <div className='container'>
+        <Link to={'/addCustomer'}>
+          <h3>
+            <span className='badge badge-dark'>Add Customer</span>
+          </h3>
+        </Link>
         <table className=' table table-striped table-dark'>
           <thead className='thead-light '>
             <tr>
-              <th colSpan='5'>
+              <th colSpan='7'>
                 {allCustomers.length > 0 ? (
                   <span>Customers in table: {allCustomers.length}</span>
                 ) : (
@@ -30,13 +36,20 @@ class CustomerTable extends Component {
               <th>Tel</th>
               <th>City</th>
               <th>State</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {customers.map((c) => {
               return (
                 <tr key={`tr${c.Id}`}>
-                  <td>{c.Name}</td>
+                  {localStorage.getItem('user') ? (
+                    <td>
+                      <Link to={'/detail/' + c.Id}>{c.Name}</Link>
+                    </td>
+                  ) : (
+                    <td>{c.Name}</td>
+                  )}
                   <td>{c.Surname}</td>
                   <td>
                     <a href={`mailto:${c.Email}`}>{c.Email}</a>
@@ -52,6 +65,21 @@ class CustomerTable extends Component {
                       ).Name
                     }
                   </td>
+                  {localStorage.getItem('user') ? (
+                    <td>
+                      {' '}
+                      <button
+                        className='btn btn-danger'
+                        onClick={() => onDelete(c.Id)}>
+                        Delete Customer
+                      </button>{' '}
+                      <Link className='btn btn-primary' to={`bills/${c.Id}`}>
+                        Show Bills
+                      </Link>
+                    </td>
+                  ) : (
+                    ''
+                  )}
                 </tr>
               );
             })}

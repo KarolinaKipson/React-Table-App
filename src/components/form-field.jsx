@@ -8,6 +8,7 @@ class FormField extends Component {
       label,
       type,
       value,
+      defaultValue,
       error,
       placeholder,
       onChange,
@@ -24,6 +25,7 @@ class FormField extends Component {
             className='form-control'
             placeholder={placeholder}
             value={value}
+            defaultValue={defaultValue}
             onChange={onChange}
           />
         </div>

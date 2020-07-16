@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 
 const CustomerSubmenu = (props) => {
@@ -15,7 +15,9 @@ const CustomerSubmenu = (props) => {
     if (localStorage.getItem('user')) {
       return (
         <div>
-          <div>Hello {localStorage.getItem('user')}</div>
+          <div>
+            Hello <Link to={'/editUser/'}>{localStorage.getItem('user')}</Link>
+          </div>
           <button onClick={logout}>Logout</button>
         </div>
       );
